@@ -18,7 +18,7 @@ cd BlogEarth-Server
 then install the dependency by
 
 ```bash
-npm init
+npm install
 ```
 
 Now to run the development server
