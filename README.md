@@ -2,7 +2,7 @@
 
 #### Create a Blog and Share it with your connectives.
 
-***
+---
 
 BlogEarth-Server is a server-side code repository. It is an open-source project.
 
@@ -27,7 +27,7 @@ Now to run the development server
 npm run server
 ```
 
-and production server
+or start the production server
 
 ```txt
 npm start
@@ -35,4 +35,4 @@ npm start
 
 Then the server is up and running on the port
 
-*`If any errors are encountered, then please raise an issue.`*
+_`If any errors are encountered, then please raise an issue.`_
