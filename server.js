@@ -2,7 +2,7 @@ const express = require("express");
 require("dotenv").config();
 
 require("./configs/dbConnector");
-const userRoute = require("./routes/upvoteRoutes");
+const userRoute = require("./routes/userRoutes");
 
 const app = express();
 
