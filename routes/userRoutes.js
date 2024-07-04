@@ -1,8 +1,5 @@
 const express = require("express");
 const {
-  register,
-  login,
-  logout,
   getProfileInfo,
   updateProfileInfo,
   updateProfilePic,
@@ -12,6 +9,7 @@ const {
   getFollowers,
   getFollowing,
 } = require("../controllers/userControllers");
+const { register, login, logout } = require("../controllers/user/authencation");
 
 const userRoute = express.Router();
 
