@@ -1,15 +1,19 @@
 const express = require("express");
+
+const { register, login, logout } = require("../controllers/user/authencation");
 const {
   getProfileInfo,
   updateProfileInfo,
   updateProfilePic,
-  addFollowing,
   updateCoverPhoto,
+} = require("../controllers/user/profile");
+const {
+  addFollowing,
   removeFollowing,
   getFollowers,
   getFollowing,
-} = require("../controllers/userControllers");
-const { register, login, logout } = require("../controllers/user/authencation");
+} = require("../controllers/user/follower");
+const isLogin = require("../middlewares/isLogin");
 
 const userRoute = express.Router();
 
@@ -23,7 +27,7 @@ userRoute.post("/login", login);
 userRoute.get("/logout", logout);
 
 // Get profile info
-userRoute.get("/profile/:id", getProfileInfo);
+userRoute.get("/profile/:id", isLogin, getProfileInfo);
 
 // Update profile info
 userRoute.put("/profile", updateProfileInfo);
