@@ -1,11 +1,45 @@
-const register = (req, res) => {
+const User = require("../models/User");
+const appError = require("../utils/appError");
+const { hashPassword } = require("../utils/hashedPassword");
+
+const register = async (req, res, next) => {
   try {
+    const { fullname, email, password, work, workAt, country, about } =
+      req.body;
+
+    // find user by email
+    const userFound = await User.findOne({
+      email,
+    });
+    if (userFound) {
+      return next(appError("User already exists", 400));
+    }
+
+    // hash password
+    const hash = await hashPassword(password);
+
+    // save user to the database
+    const user = await User.create({
+      fullname,
+      email,
+      password: hash,
+      work,
+      workAt,
+      country,
+      about,
+    });
+
     res.json({
       status: "success",
       msg: "Registration Successful",
+      data: {
+        user_id: user._id,
+        user_name: user.fullname,
+        user_email: user.email,
+      },
     });
   } catch (error) {
-    console.log(error);
+    next(appError(error.message, 500));
   }
 };
 
