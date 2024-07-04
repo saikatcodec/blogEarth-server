@@ -1,5 +1,6 @@
 const User = require("../../models/User");
 const appError = require("../../utils/appError");
+const { generateToken } = require("../../utils/authToken");
 const { hashPassword, matchPassword } = require("../../utils/hashedPassword");
 
 const register = async (req, res, next) => {
@@ -62,7 +63,11 @@ const login = async (req, res, next) => {
       return next(appError("Invalid Login Credentials", 406));
     }
 
-    // TODO: generate login token
+    // generate login token
+    const token = generateToken(user._id);
+    if (!token) {
+      return next(appError("Failed to generate token", 500));
+    }
 
     res.json({
       status: "success",
@@ -71,6 +76,7 @@ const login = async (req, res, next) => {
         user_id: user._id,
         user_name: user.fullname,
         user_email: user.email,
+        token,
       },
     });
   } catch (error) {
