@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const appError = require("../utils/appError");
-const { hashPassword } = require("../utils/hashedPassword");
+const { hashPassword, matchPassword } = require("../utils/hashedPassword");
 
 const register = async (req, res, next) => {
   try {
@@ -43,14 +43,38 @@ const register = async (req, res, next) => {
   }
 };
 
-const login = (req, res) => {
+const login = async (req, res, next) => {
   try {
+    const { email, password } = req.body;
+
+    // find user by email
+    const user = await User.findOne({
+      email,
+    });
+
+    if (!user) {
+      return next(appError("Invalid Login Credentials", 400));
+    }
+
+    // match the user password
+    const matched = await matchPassword(password, user.password);
+    if (!matched) {
+      return next(appError("Invalid Login Credentials", 400));
+    }
+
+    // TODO: generate login token
+
     res.json({
       status: "success",
       msg: "Login Successful",
+      data: {
+        user_id: user._id,
+        user_name: user.fullname,
+        user_email: user.email,
+      },
     });
   } catch (error) {
-    console.log(error);
+    next(appError(error.message, 500));
   }
 };
 
