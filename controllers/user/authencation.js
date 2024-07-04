@@ -5,7 +5,7 @@ const { hashPassword, matchPassword } = require("../../utils/hashedPassword");
 
 const register = async (req, res, next) => {
   try {
-    const { fullname, email, password, work, workAt, country, about } =
+    const { fullname, email, password, work, workPlace, country, about } =
       req.body;
 
     // find user by email
@@ -25,7 +25,7 @@ const register = async (req, res, next) => {
       email,
       password: hash,
       work,
-      workAt,
+      workPlace,
       country,
       about,
     });

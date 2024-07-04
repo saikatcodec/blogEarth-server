@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     work: {
       type: String,
     },
-    workAt: {
+    workPlace: {
       type: String,
     },
     country: {
