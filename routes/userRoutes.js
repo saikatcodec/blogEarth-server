@@ -26,8 +26,11 @@ userRoute.post("/login", login);
 // logout from the account
 userRoute.get("/logout", logout);
 
+// Login middleware to check authorization
+userRoute.use(isLogin);
+
 // Get profile info
-userRoute.get("/profile/:id", isLogin, getProfileInfo);
+userRoute.get("/profile/:id", getProfileInfo);
 
 // Update profile info
 userRoute.put("/profile", updateProfileInfo);
