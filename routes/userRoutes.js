@@ -1,3 +1,4 @@
+const multer = require("multer");
 const express = require("express");
 
 const { register, login, logout } = require("../controllers/user/authencation");
@@ -14,8 +15,12 @@ const {
   getFollowing,
 } = require("../controllers/user/follower");
 const isLogin = require("../middlewares/isLogin");
+const { profilePicStorage } = require("../configs/cloudinary");
 
 const userRoute = express.Router();
+
+// For profile pic uploader
+const upload = multer({ storage: profilePicStorage });
 
 // create user account
 userRoute.post("/register", register);
@@ -36,7 +41,7 @@ userRoute.get("/profile/:id", getProfileInfo);
 userRoute.put("/profile", updateProfileInfo);
 
 // Update profile picture
-userRoute.put("/profile-pic", updateProfilePic);
+userRoute.put("/profile-pic", upload.single("profile"), updateProfilePic);
 
 // Update cover photo
 userRoute.put("/cover-photo", updateCoverPhoto);
