@@ -61,9 +61,9 @@ userRoute.put("/following/:id", addFollowing);
 userRoute.delete("/following/:id", removeFollowing);
 
 // Get all followers
-userRoute.get("/followers", getFollowers);
+userRoute.get("/followers/:id", getFollowers);
 
 // Get all following user
-userRoute.get("/following", getFollowing);
+userRoute.get("/following/:id", getFollowing);
 
 module.exports = userRoute;

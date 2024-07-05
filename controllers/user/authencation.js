@@ -34,6 +34,7 @@ const register = async (req, res, next) => {
       status: "success",
       msg: "Registration Successful",
       data: {
+        user_id: user._id,
         user_name: user.fullname,
         user_email: user.email,
       },
