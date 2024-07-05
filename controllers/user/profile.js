@@ -104,14 +104,42 @@ const updateProfilePic = async (req, res, next) => {
   }
 };
 
-const updateCoverPhoto = (req, res) => {
+const updateCoverPhoto = async (req, res) => {
   try {
+    const user_id = req.user;
+    const userFound = await User.findById(user_id);
+
+    if (!userFound) {
+      return next(appError("User Not Found", 404));
+    }
+
+    // Delete existing image from server
+    const image_id = userFound.coverPhoto?.file_id;
+    await deleteFile(image_id);
+
+    // update new image in server
+    const user = await User.findByIdAndUpdate(
+      user_id,
+      {
+        coverPhoto: {
+          path: req.file.path,
+          file_id: req.file.filename,
+        },
+      },
+      { new: true }
+    );
+
+    // Create clone of user
+    const tempUser = user.$clone();
+    tempUser.password = "";
+
     res.json({
       status: "success",
-      msg: "Update cover photo",
+      msg: "Cover Photo Update Successfully",
+      data: tempUser,
     });
   } catch (error) {
-    console.log(error);
+    next(appError(error.message));
   }
 };
 

@@ -13,7 +13,16 @@ const profilePicStorage = new CloudinaryStorage({
   params: {
     folder: "blogearth/profilPic",
     allowed_formats: ["jpg", "png", "jpeg"],
-    transformation: { width: 300, height: 300, gravity: "auto", crop: "fill" },
+    transformation: { width: 400, height: 400, gravity: "auto", crop: "fill" },
+  },
+});
+
+const coverPhotoStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "blogearth/coverPhoto",
+    allowed_formats: ["jpg", "png", "jpeg"],
+    transformation: { width: 1028, height: 500, gravity: "auto", crop: "fill" },
   },
 });
 
@@ -27,5 +36,6 @@ const deleteFile = async (file_id) => {
 
 module.exports = {
   profilePicStorage,
+  coverPhotoStorage,
   deleteFile,
 };

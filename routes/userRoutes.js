@@ -15,12 +15,16 @@ const {
   getFollowing,
 } = require("../controllers/user/follower");
 const isLogin = require("../middlewares/isLogin");
-const { profilePicStorage } = require("../configs/cloudinary");
+const {
+  profilePicStorage,
+  coverPhotoStorage,
+} = require("../configs/cloudinary");
 
 const userRoute = express.Router();
 
 // For profile pic uploader
-const upload = multer({ storage: profilePicStorage });
+const profileUploader = multer({ storage: profilePicStorage });
+const coverUploader = multer({ storage: coverPhotoStorage });
 
 // create user account
 userRoute.post("/register", register);
@@ -41,10 +45,14 @@ userRoute.get("/profile/:id", getProfileInfo);
 userRoute.put("/profile", updateProfileInfo);
 
 // Update profile picture
-userRoute.put("/profile-pic", upload.single("profile"), updateProfilePic);
+userRoute.put(
+  "/profile-pic",
+  profileUploader.single("profile"),
+  updateProfilePic
+);
 
 // Update cover photo
-userRoute.put("/cover-photo", updateCoverPhoto);
+userRoute.put("/cover-photo", coverUploader.single("cover"), updateCoverPhoto);
 
 // Add following user
 userRoute.put("/following/:id", addFollowing);

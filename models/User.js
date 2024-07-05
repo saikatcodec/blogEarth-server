@@ -19,7 +19,8 @@ const userSchema = new mongoose.Schema(
       file_id: String,
     },
     coverPhoto: {
-      type: String,
+      path: String,
+      file_id: String,
     },
     work: {
       type: String,
