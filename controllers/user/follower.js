@@ -99,25 +99,45 @@ const removeFollowing = async (req, res, next) => {
   }
 };
 
-const getFollowers = (req, res) => {
+const getFollowers = async (req, res, next) => {
   try {
+    const { id } = req.params;
+    const user = await User.findById(id).populate("followers");
+
+    if (!user) {
+      return next(appError("User not found", 404));
+    }
+
+    const followers = user.followers;
+
     res.json({
       status: "success",
-      msg: "Followers list",
+      msg: `${followers.length} people followed you`,
+      data: followers,
     });
   } catch (error) {
-    console.log(error);
+    next(appError(error.message));
   }
 };
 
-const getFollowing = (req, res) => {
+const getFollowing = async (req, res, next) => {
   try {
+    const { id } = req.params;
+    const user = await User.findById(id).populate("following");
+
+    if (!user) {
+      return next(appError("User not found", 404));
+    }
+
+    const following = user.following;
+
     res.json({
       status: "success",
-      msg: "Following users list",
+      msg: `You followed ${following.length} people`,
+      data: following,
     });
   } catch (error) {
-    console.log(error);
+    next(appError(error.message));
   }
 };
 

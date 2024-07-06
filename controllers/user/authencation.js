@@ -51,7 +51,7 @@ const login = async (req, res, next) => {
     // find user by email
     const user = await User.findOne({
       email,
-    });
+    }).select("+password");
 
     if (!user) {
       return next(appError("Invalid Login Credentials", 406));

@@ -12,14 +12,10 @@ const getProfileInfo = async (req, res, next) => {
       return next(appError("Invalid User", 400));
     }
 
-    // Create clone of user
-    const tempUser = user.$clone();
-    tempUser.password = "";
-
     res.json({
       status: "success",
       msg: "Profile information",
-      data: tempUser,
+      data: user,
     });
   } catch (error) {
     next(appError(error.message));
@@ -51,14 +47,10 @@ const updateProfileInfo = async (req, res, next) => {
       }
     );
 
-    // Create clone of user
-    const tempUser = user.$clone();
-    tempUser.password = "";
-
     res.json({
       status: "success",
       msg: "Profile Update Succesful",
-      data: tempUser,
+      data: user,
     });
   } catch (error) {
     next(appError(error.message));
@@ -90,14 +82,10 @@ const updateProfilePic = async (req, res, next) => {
       { new: true }
     );
 
-    // Create clone of user
-    const tempUser = user.$clone();
-    tempUser.password = "";
-
     res.json({
       status: "success",
       msg: "Profile Picture Update Successfully",
-      data: tempUser,
+      data: user,
     });
   } catch (error) {
     next(appError(error.message));
@@ -129,14 +117,10 @@ const updateCoverPhoto = async (req, res) => {
       { new: true }
     );
 
-    // Create clone of user
-    const tempUser = user.$clone();
-    tempUser.password = "";
-
     res.json({
       status: "success",
       msg: "Cover Photo Update Successfully",
-      data: tempUser,
+      data: user,
     });
   } catch (error) {
     next(appError(error.message));
