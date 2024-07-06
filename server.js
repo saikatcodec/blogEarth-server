@@ -4,6 +4,7 @@ require("dotenv").config();
 require("./configs/dbConnector");
 const userRoute = require("./routes/userRoutes");
 const globalErrHandle = require("./middlewares/globalErrHandle");
+const postRoutes = require("./routes/postRoutes");
 
 const app = express();
 
@@ -11,9 +12,13 @@ const app = express();
 app.use(express.json());
 
 // TODO: routers
+// User routes
 app.use("/api/v1/user", userRoute);
 
-// TODO: global error handle
+// Post routes
+app.use("/api/v1/posts", postRoutes);
+
+// global error handle
 app.use(globalErrHandle);
 
 // Listen on port
