@@ -9,7 +9,7 @@ const createPost = async (req, res, next) => {
     // Find login user
     const user = await User.findById(req.user);
     if (!user) {
-      return next(appError("User not found", 404));
+      return next(appError("User not found. Please log in", 401));
     }
 
     // Create a post
@@ -39,14 +39,52 @@ const createPost = async (req, res, next) => {
   }
 };
 
-const updatePost = (req, res, next) => {
+const updatePost = async (req, res, next) => {
   try {
+    const post_id = req.params.id;
+    const { title, content, category, keyword } = req.body;
+
+    // check logged in user
+    const user = await User.findById(req.user);
+    if (!user) {
+      return next(appError("User not found. Please log in", 401));
+    }
+
+    // find the post
+    const post = await Post.findById(post_id);
+    if (!post) {
+      return next(appError("Post is not available", 404));
+    }
+
+    // check the post author
+    if (user._id.toString() !== post.author._id.toString()) {
+      return next(appError("You are not allowed to edit the post", 403));
+    }
+
+    const postUpdated = await Post.findByIdAndUpdate(
+      post_id,
+      {
+        title,
+        content,
+        category,
+        keyword,
+        banner: {
+          path: req.file?.path || post.banner.path,
+          file_id: req.file?.filename || post.banner.file_id,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
     res.json({
       status: "success",
       msg: "Post updated successfully",
+      data: postUpdated,
     });
   } catch (error) {
-    console.log(error);
+    next(appError(error.message));
   }
 };
 

@@ -22,7 +22,7 @@ postRoutes.use(isLogin);
 postRoutes.post("/", bannerUploader.single("banner"), createPost);
 
 // Update post
-postRoutes.put("/:id", updatePost);
+postRoutes.put("/:id", bannerUploader.single("banner"), updatePost);
 
 // Delete post
 postRoutes.delete("/:id", deletePost);
