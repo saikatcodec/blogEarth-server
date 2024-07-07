@@ -120,14 +120,23 @@ const deletePost = async (req, res, next) => {
   }
 };
 
-const getSinglePost = (req, res, next) => {
+const getSinglePost = async (req, res, next) => {
   try {
+    const post_id = req.params.id;
+
+    const post = await Post.findById(post_id);
+
+    if (!post) {
+      return next(appError("Post is not available", 404));
+    }
+
     res.json({
       status: "success",
       msg: "A single post",
+      data: post,
     });
   } catch (error) {
-    console.log(error);
+    next(appError(error.message));
   }
 };
 
