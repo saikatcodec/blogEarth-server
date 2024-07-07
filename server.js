@@ -8,15 +8,18 @@ const postRoutes = require("./routes/postRoutes");
 
 const app = express();
 
-// TODO: middlewares
+// middlewares
 app.use(express.json());
 
-// TODO: routers
 // User routes
 app.use("/api/v1/user", userRoute);
 
 // Post routes
 app.use("/api/v1/posts", postRoutes);
+
+// TODO: comment routes
+// TODO: upvote routes
+// TODO: downvote routes
 
 // global error handle
 app.use(globalErrHandle);

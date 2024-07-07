@@ -1,11 +1,41 @@
-const createPost = (req, res, next) => {
+const Post = require("../../models/Post");
+const User = require("../../models/User");
+const appError = require("../../utils/appError");
+
+const createPost = async (req, res, next) => {
   try {
+    const { title, content, category, keyword } = req.body;
+
+    // Find login user
+    const user = await User.findById(req.user);
+    if (!user) {
+      return next(appError("User not found", 404));
+    }
+
+    // Create a post
+    const post = await Post.create({
+      title,
+      content,
+      category,
+      keyword,
+      banner: {
+        path: req.file?.path,
+        file_id: req.file?.filename,
+      },
+      author: user._id,
+    });
+
+    // Add reference to the user
+    user.posts.push(post._id);
+    await user.save();
+
     res.json({
       status: "success",
       msg: "Post created successfully",
+      data: post,
     });
   } catch (error) {
-    console.log(error);
+    next(appError(error.message));
   }
 };
 

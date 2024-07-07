@@ -1,3 +1,4 @@
+const multer = require("multer");
 const express = require("express");
 const isLogin = require("../middlewares/isLogin");
 const {
@@ -7,14 +8,18 @@ const {
   getSinglePost,
   getAllPost,
 } = require("../controllers/post/postControllers");
+const { postBannerStorage } = require("../configs/cloudinary");
 
 const postRoutes = express.Router();
+
+// Storage
+const bannerUploader = multer({ storage: postBannerStorage });
 
 // Login middleware
 postRoutes.use(isLogin);
 
 // Create post
-postRoutes.post("/", createPost);
+postRoutes.post("/", bannerUploader.single("banner"), createPost);
 
 // Update post
 postRoutes.put("/:id", updatePost);

@@ -12,7 +12,7 @@ const profilePicStorage = new CloudinaryStorage({
   params: {
     folder: "blogearth/profilPic",
     allowed_formats: ["jpg", "png", "jpeg"],
-    transformation: { width: 400, height: 400, gravity: "auto", crop: "fill" },
+    transformation: { width: 400, height: 400, crop: "scale" },
   },
 });
 
@@ -21,7 +21,20 @@ const coverPhotoStorage = new CloudinaryStorage({
   params: {
     folder: "blogearth/coverPhoto",
     allowed_formats: ["jpg", "png", "jpeg"],
-    transformation: { width: 1028, height: 500, gravity: "auto", crop: "fill" },
+    transformation: { width: 1028, height: 500, crop: "limit" },
+  },
+});
+
+const postBannerStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "blogearth/banner",
+    allowed_formats: ["jpg", "png", "jpeg"],
+    transformation: {
+      width: 1080,
+      height: 700,
+      crop: "limit",
+    },
   },
 });
 
@@ -36,5 +49,6 @@ const deleteFile = async (file_id) => {
 module.exports = {
   profilePicStorage,
   coverPhotoStorage,
+  postBannerStorage,
   deleteFile,
 };

@@ -11,7 +11,8 @@ const postSchema = new mongoose.Schema(
       required: true,
     },
     banner: {
-      type: String,
+      path: String,
+      file_id: String,
     },
     category: {
       // TODO: need to be updated
