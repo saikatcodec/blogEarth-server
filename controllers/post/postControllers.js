@@ -140,14 +140,24 @@ const getSinglePost = async (req, res, next) => {
   }
 };
 
-const getAllPost = (req, res, next) => {
+const getAllPost = async (req, res, next) => {
   try {
+    const user_id = req.params.user_id;
+    const user = await User.findById(user_id).populate("posts");
+
+    if (!user) {
+      return next(appError("Invalid User", 404));
+    }
+
+    const posts = user.posts;
+
     res.json({
       status: "success",
-      msg: "All Post",
+      msg: `You have ${posts.length} posts`,
+      data: posts,
     });
   } catch (error) {
-    console.log(error);
+    next(appError(error.message));
   }
 };
 
