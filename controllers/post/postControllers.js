@@ -88,14 +88,35 @@ const updatePost = async (req, res, next) => {
   }
 };
 
-const deletePost = (req, res, next) => {
+const deletePost = async (req, res, next) => {
   try {
+    const post_id = req.params.id;
+
+    // check logged in user
+    const user = await User.findById(req.user);
+    if (!user) {
+      return next(appError("User not found. Please log in", 401));
+    }
+
+    // find the post
+    const post = await Post.findById(post_id);
+    if (!post) {
+      return next(appError("Post is not available", 404));
+    }
+
+    // check the post author
+    if (user._id.toString() !== post.author._id.toString()) {
+      return next(appError("You are not allowed to edit the post", 403));
+    }
+
+    await Post.findByIdAndDelete(post_id);
+
     res.json({
       status: "success",
       msg: "Post deleted successfully",
     });
   } catch (error) {
-    console.log(error);
+    next(appError(error.message));
   }
 };
 
