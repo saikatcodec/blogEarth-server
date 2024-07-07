@@ -5,6 +5,7 @@ require("./configs/dbConnector");
 const userRoute = require("./routes/userRoutes");
 const globalErrHandle = require("./middlewares/globalErrHandle");
 const postRoutes = require("./routes/postRoutes");
+const commentRoutes = require("./routes/commentRoutes");
 
 const app = express();
 
@@ -15,9 +16,11 @@ app.use(express.json());
 app.use("/api/v1/user", userRoute);
 
 // Post routes
-app.use("/api/v1/posts", postRoutes);
+app.use("/api/v1/post", postRoutes);
 
-// TODO: comment routes
+//  Comment routes
+app.use("/api/v1/comment", commentRoutes);
+
 // TODO: upvote routes
 // TODO: downvote routes
 
