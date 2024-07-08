@@ -1,3 +1,4 @@
+const { deleteFile } = require("../../configs/cloudinary");
 const Post = require("../../models/Post");
 const User = require("../../models/User");
 const appError = require("../../utils/appError");
@@ -59,6 +60,10 @@ const updatePost = async (req, res, next) => {
     // check the post author
     if (user._id.toString() !== post.author._id.toString()) {
       return next(appError("You are not allowed to edit the post", 403));
+    }
+
+    if (req.file) {
+      await deleteFile(post.banner?.file_id);
     }
 
     const postUpdated = await Post.findByIdAndUpdate(
