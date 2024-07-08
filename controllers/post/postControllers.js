@@ -111,8 +111,14 @@ const deletePost = async (req, res, next) => {
 
     // check the post author
     if (user._id.toString() !== post.author._id.toString()) {
-      return next(appError("You are not allowed to edit the post", 403));
+      return next(appError("You are not allowed to delete the post", 403));
     }
+
+    // also delete reference from the user
+    user.posts = user.posts.filter(
+      (id) => id.toString() !== post._id.toString()
+    );
+    await user.save();
 
     await Post.findByIdAndDelete(post_id);
 

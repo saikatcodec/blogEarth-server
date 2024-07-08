@@ -21,6 +21,7 @@ const addNewComment = async (req, res, next) => {
     const comment = await Comment.create({
       message,
       author: user._id,
+      post: post._id,
     });
 
     user.comments.push(comment._id);
@@ -75,14 +76,56 @@ const updateComment = async (req, res, next) => {
   }
 };
 
-const deleteComment = (req, res, next) => {
+const deleteComment = async (req, res, next) => {
   try {
+    // Find all necessary id
+    const user_id = req.user;
+    const comment_id = req.params.id;
+
+    // Find the user
+    const user = await User.findById(user_id);
+    if (!user) {
+      return next(appError("Invalid User. Please log in", 401));
+    }
+
+    // Find the comment
+    const comment = await Comment.findById(comment_id);
+    if (!comment) {
+      return next(appError("Comment is not Found", 404));
+    }
+
+    // Find the post
+    const post = await Post.findById(comment.post);
+    if (!post) {
+      return next(appError("Post is not available", 404));
+    }
+
+    // Validity check
+    if (user._id.toString() !== comment.author.toString()) {
+      return next(appError("You are not allowed to delete the comment", 403));
+    }
+
+    // Delete reference from user
+    user.comments = user.comments.filter(
+      (cid) => cid.toString() !== comment._id.toString()
+    );
+    await user.save();
+
+    // Delete reference from post
+    post.comments = post.comments.filter(
+      (cid) => cid.toString() !== comment._id.toString()
+    );
+    await post.save();
+
+    // Detete comment
+    await Comment.findByIdAndDelete(comment_id);
+
     res.json({
       status: "success",
       msg: "Comment deleted successfully",
     });
   } catch (error) {
-    console.log(error);
+    next(appError(error.message));
   }
 };
 
