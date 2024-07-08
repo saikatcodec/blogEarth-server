@@ -129,14 +129,23 @@ const deleteComment = async (req, res, next) => {
   }
 };
 
-const getAllComments = (req, res, next) => {
+const getAllComments = async (req, res, next) => {
   try {
+    const { user_id } = req.params;
+    const user = await User.findById(user_id).populate("comments");
+    if (!user) {
+      return next(appError("user not found", 404));
+    }
+
+    const comments = user.comments;
+
     res.json({
       status: "success",
-      msg: "All comments listed",
+      msg: `User has ${comments.length} comments`,
+      data: comments,
     });
   } catch (error) {
-    console.log(error);
+    next(appError(error.message));
   }
 };
 
