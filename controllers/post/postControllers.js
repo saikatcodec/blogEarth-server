@@ -1,4 +1,5 @@
 const { deleteFile } = require("../../configs/cloudinary");
+const Comment = require("../../models/Comment");
 const Post = require("../../models/Post");
 const User = require("../../models/User");
 const appError = require("../../utils/appError");
@@ -62,6 +63,7 @@ const updatePost = async (req, res, next) => {
       return next(appError("You are not allowed to edit the post", 403));
     }
 
+    // Delete existing file
     if (req.file) {
       await deleteFile(post.banner?.file_id);
     }
@@ -114,11 +116,17 @@ const deletePost = async (req, res, next) => {
       return next(appError("You are not allowed to delete the post", 403));
     }
 
+    // also delete comment
+    for (let i = 0; i < post.comments.length; i++) {
+      await Comment.findByIdAndDelete(post.comments[i]);
+    }
+
     // also delete reference from the user
-    user.posts = user.posts.filter(
+    const userUpdate = await User.findById(post.author);
+    userUpdate.posts = userUpdate.posts.filter(
       (id) => id.toString() !== post._id.toString()
     );
-    await user.save();
+    await userUpdate.save();
 
     await Post.findByIdAndDelete(post_id);
 
@@ -127,7 +135,7 @@ const deletePost = async (req, res, next) => {
       msg: "Post deleted successfully",
     });
   } catch (error) {
-    next(appError(error.message));
+    next(appError(error));
   }
 };
 
