@@ -127,7 +127,10 @@ const deletePost = async (req, res, next) => {
       await Upvote.findByIdAndDelete(post.upvotes[i]);
     }
 
-    // TODO: delete downvotes
+    // also delete downvotes
+    for (let i = 0; i < post.downvotes.length; i++) {
+      await Upvote.findByIdAndDelete(post.downvotes[i]);
+    }
 
     // also delete reference from the user
     const userUpdate = await User.findById(post.author);
