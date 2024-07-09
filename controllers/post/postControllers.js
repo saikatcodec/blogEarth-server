@@ -1,6 +1,7 @@
 const { deleteFile } = require("../../configs/cloudinary");
 const Comment = require("../../models/Comment");
 const Post = require("../../models/Post");
+const Upvote = require("../../models/Upvote");
 const User = require("../../models/User");
 const appError = require("../../utils/appError");
 
@@ -116,10 +117,17 @@ const deletePost = async (req, res, next) => {
       return next(appError("You are not allowed to delete the post", 403));
     }
 
-    // also delete comment
+    // also delete comments
     for (let i = 0; i < post.comments.length; i++) {
       await Comment.findByIdAndDelete(post.comments[i]);
     }
+
+    // also delete upvotes
+    for (let i = 0; i < post.upvotes.length; i++) {
+      await Upvote.findByIdAndDelete(post.upvotes[i]);
+    }
+
+    // TODO: delete downvotes
 
     // also delete reference from the user
     const userUpdate = await User.findById(post.author);
