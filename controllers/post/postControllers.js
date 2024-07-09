@@ -1,5 +1,6 @@
 const { deleteFile } = require("../../configs/cloudinary");
 const Comment = require("../../models/Comment");
+const Downvote = require("../../models/Downvote");
 const Post = require("../../models/Post");
 const Upvote = require("../../models/Upvote");
 const User = require("../../models/User");
@@ -129,7 +130,7 @@ const deletePost = async (req, res, next) => {
 
     // also delete downvotes
     for (let i = 0; i < post.downvotes.length; i++) {
-      await Upvote.findByIdAndDelete(post.downvotes[i]);
+      await Downvote.findByIdAndDelete(post.downvotes[i]);
     }
 
     // also delete reference from the user
