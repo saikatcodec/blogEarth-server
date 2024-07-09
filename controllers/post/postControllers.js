@@ -116,10 +116,12 @@ const deletePost = async (req, res, next) => {
       return next(appError("You are not allowed to delete the post", 403));
     }
 
-    // also delete comment
+    // also delete comments
     for (let i = 0; i < post.comments.length; i++) {
       await Comment.findByIdAndDelete(post.comments[i]);
     }
+
+    // TODO: delete upvotes & downvotes
 
     // also delete reference from the user
     const userUpdate = await User.findById(post.author);

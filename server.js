@@ -6,6 +6,7 @@ const userRoute = require("./routes/userRoutes");
 const globalErrHandle = require("./middlewares/globalErrHandle");
 const postRoutes = require("./routes/postRoutes");
 const commentRoutes = require("./routes/commentRoutes");
+const upvoteRoutes = require("./routes/upvoteRoutes");
 
 const app = express();
 
@@ -21,7 +22,9 @@ app.use("/api/v1/post", postRoutes);
 //  Comment routes
 app.use("/api/v1/comment", commentRoutes);
 
-// TODO: upvote routes
+// upvote routes
+app.use("/api/v1/upvote", upvoteRoutes);
+
 // TODO: downvote routes
 
 // global error handle
