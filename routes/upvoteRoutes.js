@@ -22,6 +22,6 @@ upvoteRoutes.delete("/:up_id", removeUpvote);
 upvoteRoutes.get("/post/:post_id", getAllPostUpvote);
 
 // gell all upvotes of a user
-upvoteRoutes.get("/user/:post_id", getAllUserUpvote);
+upvoteRoutes.get("/user/:user_id", getAllUserUpvote);
 
 module.exports = upvoteRoutes;

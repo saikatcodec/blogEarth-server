@@ -76,22 +76,40 @@ const removeUpvote = async (req, res, next) => {
   }
 };
 
-const getAllPostUpvote = (req, res, next) => {
+const getAllPostUpvote = async (req, res, next) => {
   try {
+    const { post_id } = req.params;
+    const post = await Post.findById(post_id).populate("upvotes");
+    if (!post) {
+      return next(appError("Post is not available", 404));
+    }
+
+    const upvotes = post.upvotes;
+
     res.json({
       status: "success",
-      msg: "All Post upvotes are...",
+      msg: `Post has ${upvotes.length} upvotes`,
+      data: upvotes,
     });
   } catch (error) {
     next(appError(error.message));
   }
 };
 
-const getAllUserUpvote = (req, res, next) => {
+const getAllUserUpvote = async (req, res, next) => {
   try {
+    const { user_id } = req.params;
+    const user = await User.findById(user_id).populate("upvotes");
+    if (!user) {
+      return next(appError("User not found", 404));
+    }
+
+    const upvotes = user.upvotes;
+
     res.json({
       status: "success",
-      msg: "All user upvotes are...",
+      msg: `User has ${upvotes.length} upvotes`,
+      data: upvotes,
     });
   } catch (error) {
     next(appError(error.message));
