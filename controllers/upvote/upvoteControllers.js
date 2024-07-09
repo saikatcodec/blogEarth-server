@@ -44,8 +44,29 @@ const addUpvote = async (req, res, next) => {
   }
 };
 
-const removeUpvote = (req, res, next) => {
+const removeUpvote = async (req, res, next) => {
   try {
+    const { up_id } = req.params;
+    const user_id = req.user;
+
+    const upvote = await Upvote.findById(up_id);
+    if (!upvote) {
+      return next(appError("Upvote is not available", 404));
+    }
+
+    if (user_id.toString() !== upvote.author.toString()) {
+      return next(appError("You are not allowed to remove the upvote", 403));
+    }
+
+    const post = await Post.findById(upvote.post);
+
+    post.upvotes = post.upvotes.filter(
+      (uip) => uip.toString() !== upvote._id.toString()
+    );
+    post.save();
+
+    await Upvote.findByIdAndDelete(up_id);
+
     res.json({
       status: "success",
       msg: "Upvote removed successfully",

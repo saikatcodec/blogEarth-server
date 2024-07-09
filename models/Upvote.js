@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const appError = require("../utils/appError");
+const User = require("./User");
 
 const upvoteSchema = new mongoose.Schema(
   {
@@ -26,6 +27,17 @@ upvoteSchema.post("save", (err, res, next) => {
   } else {
     next(err);
   }
+});
+
+upvoteSchema.post("findOneAndDelete", async (res, next) => {
+  if (res) {
+    const user = await User.findById(res.author);
+    user.upvotes = user.upvotes.filter(
+      (uid) => uid.toString() !== res._id.toString()
+    );
+    await user.save();
+  }
+  next();
 });
 
 const Upvote = mongoose.model("Upvote", upvoteSchema);
