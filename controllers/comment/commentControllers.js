@@ -105,12 +105,6 @@ const deleteComment = async (req, res, next) => {
       return next(appError("You are not allowed to delete the comment", 403));
     }
 
-    // Delete reference from user
-    user.comments = user.comments.filter(
-      (cid) => cid.toString() !== comment._id.toString()
-    );
-    await user.save();
-
     // Delete reference from post
     post.comments = post.comments.filter(
       (cid) => cid.toString() !== comment._id.toString()
