@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 require("dotenv").config();
 
 require("./configs/dbConnector");
@@ -12,6 +13,7 @@ const downvoteRoutes = require("./routes/downvoteRoutes");
 const app = express();
 
 // middlewares
+app.use(cors());
 app.use(express.json());
 
 // User routes
