@@ -9,6 +9,8 @@ const postRoutes = require("./routes/postRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const upvoteRoutes = require("./routes/upvoteRoutes");
 const downvoteRoutes = require("./routes/downvoteRoutes");
+const isLogin = require("./middlewares/isLogin");
+const verifyUser = require("./controllers/auth/auth");
 
 const app = express();
 
@@ -30,6 +32,9 @@ app.use("/api/v1/upvote", upvoteRoutes);
 
 // downvote routes
 app.use("/api/v1/downvote", downvoteRoutes);
+
+// verify token routes
+app.get("/api/v1/verify", isLogin, verifyUser);
 
 // global error handle
 app.use(globalErrHandle);
